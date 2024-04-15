@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface IProductService {
-    Page<Product> getAllProduct(Pageable pageable);
+    Page<Product> getAllProduct(Long productId, String productName, Pageable pageable);
     Product insertProduct(ProductDTO productDTO);
     void deleteProduct(Long productId);
     Product getProductById(Long productId) throws Exception;

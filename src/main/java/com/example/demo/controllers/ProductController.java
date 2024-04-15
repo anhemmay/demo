@@ -20,14 +20,17 @@ public class ProductController {
     private final IProductService productService;
 
     @GetMapping
-    public ResponseEntity<Page<Product>> getAllProducts(@RequestParam(required = true, defaultValue = "0") int page,
-                                                        @RequestParam(required = true, defaultValue = "1") int limit){
+    public ResponseEntity<Page<Product>> getAllProducts(
+            @RequestParam(defaultValue = "", name = "product_id") Long productId,
+            @RequestParam(defaultValue = "", name = "product_name") String productName,
+            @RequestParam(required = true, defaultValue = "0") int page,
+            @RequestParam(required = true, defaultValue = "1") int limit){
         PageRequest pageRequest = PageRequest.of(
                 page,
                 limit,
                 Sort.by("id")
         );
-        Page<Product> productPage = productService.getAllProduct(pageRequest);
+        Page<Product> productPage = productService.getAllProduct(productId, productName, pageRequest);
         return ResponseEntity.ok().body(productPage);
     }
 
