@@ -5,10 +5,12 @@ import com.example.demo.models.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface IProductService {
-    Page<Product> getAllProduct(Long productId, String productName, Pageable pageable);
-    Product insertProduct(ProductDTO productDTO);
-    void deleteProduct(Long productId);
-    Product getProductById(Long productId) throws Exception;
-    Product updateProduct(ProductDTO productDTO, Long productId) throws Exception;
+    Page<Product> getAllProduct(Boolean status, String productCode, String name, List<Integer> cycle, String type, Pageable pageable);
+//    Product insertProduct(ProductDTO productDTO);
+//    void deleteProduct(Long productId);
+//    Product getProductById(Long productId) throws Exception;
+//    Product updateProduct(ProductDTO productDTO, Long productId) throws Exception;
 }
