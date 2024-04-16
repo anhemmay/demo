@@ -33,10 +33,10 @@ public class Product {
     @JsonManagedReference
     private List<Type> type;
 
-    @Column(name = "status")
+    @Column(name = "status", columnDefinition = "boolean default true", insertable = false)
     private Boolean status;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<ProductDetail> productDetails;
 

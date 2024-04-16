@@ -24,7 +24,7 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<ProductListResponse> getAllProducts(
-            @RequestParam(defaultValue = "", name = "status") Boolean status,
+            @RequestParam(defaultValue = "1", name = "status") Boolean status,
             @RequestParam(defaultValue = "", name = "product_code") String productCode,
             @RequestParam(defaultValue = "", name = "name") String name,
             @RequestParam(defaultValue = "", name = "cycle") String cycle,
@@ -44,32 +44,40 @@ public class ProductController {
         productListResponse.setTotalPages(productPage.getTotalPages());
         return ResponseEntity.ok().body(productListResponse);
     }
-//
-//    @GetMapping("/{id}")
-//    public ResponseEntity<?> getProductById(@PathVariable Long id){
-//        try{
-//            return ResponseEntity.ok().body(productService.getProductById(id));
-//
-//        }catch (Exception e){
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
-//
-//    @PostMapping
-//    public ResponseEntity<Product> insertProduct(@RequestBody ProductDTO productDTO){
-//        return ResponseEntity.ok().body(productService.insertProduct(productDTO));
-//    }
-//    @PutMapping("/{id}")
-//    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO){
-//        try {
-//            return ResponseEntity.ok().body(productService.updateProduct(productDTO, id));
-//        }catch (Exception e){
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<String> deleteProduct(@PathVariable Long id){
-//        productService.deleteProduct(id);
-//        return ResponseEntity.ok().body("Delete Product successfully");
-//    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getProductById(@PathVariable Long id){
+        try{
+            return ResponseEntity.ok().body(productService.getProductById(id));
+
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<?> insertProduct(@RequestBody ProductDTO productDTO){
+        try {
+            return ResponseEntity.ok().body(productService.insertProduct(productDTO));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO){
+        try {
+            return ResponseEntity.ok().body(productService.updateProduct(productDTO, id));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteProduct(@PathVariable Long id){
+        try {
+            productService.deleteProduct(id);
+            return ResponseEntity.ok().body("Delete Product successfully");
+        } catch (Exception e) {
+            return ResponseEntity.ok().body(e.getMessage());
+        }
+    }
 }

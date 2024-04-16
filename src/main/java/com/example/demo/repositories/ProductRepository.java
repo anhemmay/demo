@@ -11,10 +11,10 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    @Query("SELECT p FROM Product p join p.productDetails pd " +
-            "join p.type t " +
+    @Query("SELECT p FROM Product p JOIN p.productDetails pd " +
+            "JOIN p.type t " +
             "WHERE p.status = :status " +
-            "AND pd.productCode LIKE %:productCode% " +
+            "AND (:productCode = '' OR pd.productCode LIKE %:productCode%) " +
             "AND (p.name LIKE %:name% OR pd.name LIKE %:name%) " +
             "AND pd.cycle IN :cycle " +
             "AND t.name = :type"

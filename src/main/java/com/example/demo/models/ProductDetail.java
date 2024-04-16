@@ -38,6 +38,6 @@ public class ProductDetail {
     @Column(name = "cycle")
     private Integer cycle;
 
-    @Column(name = "status")
+    @Column(name = "status", columnDefinition = "boolean default true", insertable = false)
     private Boolean status;
 }
