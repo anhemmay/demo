@@ -11,20 +11,23 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    @Query("SELECT p FROM Product p JOIN p.productDetails pd " +
-            "JOIN p.type t " +
-            "WHERE p.status = :status " +
-            "AND (:productCode = '' OR :productCode IS NULL OR pd.productCode LIKE %:productCode%) " +
-            "AND (:name = '' OR :name IS NULL OR p.name LIKE %:name% OR pd.name LIKE %:name%) " +
-            "AND (:cycle = '' OR :cycle IS NULL OR pd.cycle IN :cycle) " +
-            "AND (:type = '' OR :type IS NULL OR t.name = :type)"
-    )
+
+@Query("SELECT p FROM Product p " +
+        "WHERE p.status = :status " +
+        "AND (:productCode IS NULL OR EXISTS (SELECT pd FROM ProductDetail pd WHERE pd.product = p AND pd.productCode LIKE %:productCode%)) " +
+        "AND (:name IS NULL OR p.name LIKE %:name% OR EXISTS (SELECT pd FROM ProductDetail pd WHERE pd.product = p AND pd.name LIKE %:name%)) " +
+        "AND (:cycle IS NULL OR EXISTS (SELECT pd FROM ProductDetail pd WHERE pd.product = p AND pd.cycle IN (:cycle))) " +
+        "AND (:type IS NULL OR EXISTS (SELECT t FROM Type t WHERE t.product = p AND t.name = :type)) " +
+        "AND (:minPrice IS NULL AND :maxPrice IS NULL OR EXISTS (SELECT pd FROM ProductDetail pd WHERE pd.product = p AND pd.price BETWEEN :minPrice AND :maxPrice))"
+)
     Page<Product> findAllProduct(
             @Param("status") Boolean status,
             @Param("productCode") String productCode,
             @Param("name") String name,
-            @Param("cycle") List<Integer> cycle,
+            @Param("cycle") List<String> cycle,
             @Param("type") String type,
+            @Param("minPrice") Float minPrice,
+            @Param("maxPrice") Float maxPrice,
             Pageable pageable
     );
 }

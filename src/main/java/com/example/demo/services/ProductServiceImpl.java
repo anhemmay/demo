@@ -26,13 +26,15 @@ public class ProductServiceImpl implements IProductService{
 
     private final TypeRepository typeRepository;
     @Override
-    public Page<Product> getAllProduct(Boolean status, String productCode, String name, List<Integer> cycle, String type, Pageable pageable) {
+    public Page<Product> getAllProduct(Boolean status, String productCode, String name, List<String> cycle, String type, Float minPrice, Float maxPrice, Pageable pageable) {
         return productRepository.findAllProduct(
                 status,
                 productCode,
                 name,
                 cycle,
                 type,
+                minPrice,
+                maxPrice,
                 pageable
         );
     }

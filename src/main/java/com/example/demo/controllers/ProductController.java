@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,11 +25,13 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<ProductListResponse> getAllProducts(
-            @RequestParam(defaultValue = "1", name = "status") Boolean status,
-            @RequestParam(defaultValue = "", name = "product_code") String productCode,
-            @RequestParam(defaultValue = "", name = "name") String name,
-            @RequestParam(defaultValue = "", name = "cycle") String cycle,
-            @RequestParam(defaultValue = "", name = "type") String type,
+            @RequestParam(defaultValue = "1", name = "status", required = false) Boolean status,
+            @RequestParam(name = "product_code", required = false) String productCode,
+            @RequestParam(name = "name", required = false) String name,
+            @RequestParam(name = "cycle", required = false) List<String> cycle,
+            @RequestParam(name = "type", required = false) String type,
+            @RequestParam(name = "min_price", required = false) Float minPrice,
+            @RequestParam(name = "max_price", required = false) Float maxPrice,
             @RequestParam(defaultValue = "0", name = "page", required = true) int page,
             @RequestParam(defaultValue = "1", name = "limit", required = true) int limit){
         PageRequest pageRequest = PageRequest.of(
@@ -36,8 +39,8 @@ public class ProductController {
                 limit,
                 Sort.by("id")
         );
-        List<Integer> cycles = Arrays.stream(cycle.split(",")).map(Integer::parseInt).toList();
-        Page<Product> productPage = productService.getAllProduct(status, productCode, name, cycles, type, pageRequest);
+
+        Page<Product> productPage = productService.getAllProduct(status, productCode, name, cycle, type, minPrice, maxPrice, pageRequest);
         List<Product> products = productPage.getContent();
         ProductListResponse productListResponse = new ProductListResponse();
         productListResponse.setProductResponses(products);

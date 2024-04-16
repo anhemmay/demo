@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface IProductService {
-    Page<Product> getAllProduct(Boolean status, String productCode, String name, List<Integer> cycle, String type, Pageable pageable);
+    Page<Product> getAllProduct(Boolean status, String productCode, String name, List<String> cycle, String type, Float minPrice, Float maxPrice, Pageable pageable);
     Product insertProduct(ProductDTO productDTO) throws Exception;
     void deleteProduct(Long productId) throws Exception;
     Product getProductById(Long productId) throws Exception;
