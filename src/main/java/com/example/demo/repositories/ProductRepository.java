@@ -14,10 +14,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT p FROM Product p JOIN p.productDetails pd " +
             "JOIN p.type t " +
             "WHERE p.status = :status " +
-            "AND (:productCode = '' OR pd.productCode LIKE %:productCode%) " +
-            "AND (p.name LIKE %:name% OR pd.name LIKE %:name%) " +
-            "AND pd.cycle IN :cycle " +
-            "AND t.name = :type"
+            "AND (:productCode = '' OR :productCode IS NULL OR pd.productCode LIKE %:productCode%) " +
+            "AND (:name = '' OR :name IS NULL OR p.name LIKE %:name% OR pd.name LIKE %:name%) " +
+            "AND (:cycle = '' OR :cycle IS NULL OR pd.cycle IN :cycle) " +
+            "AND (:type = '' OR :type IS NULL OR t.name = :type)"
     )
     Page<Product> findAllProduct(
             @Param("status") Boolean status,
