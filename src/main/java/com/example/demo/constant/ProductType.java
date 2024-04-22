@@ -9,4 +9,7 @@ public class ProductType {
     public static final String DATA = "data";
     public static final String ROAMING = "roaming";
 
+    public static List<String>getListProductTypes(){
+        return Arrays.asList(TRA_TRUOC, TRA_SAU, DATA, ROAMING);
+    }
 }

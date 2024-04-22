@@ -41,11 +41,7 @@ public class ProductServiceImpl implements IProductService {
     public Product insertProduct(ProductDTO productDTO) throws Exception {
 
         for (String type : productDTO.getTypes()) {
-            if (!type.contains(ProductType.DATA)
-                    && !type.contains(ProductType.ROAMING)
-                    && !type.contains(ProductType.TRA_TRUOC)
-                    && !type.contains(ProductType.TRA_SAU)
-            )
+            if (!ProductType.getListProductTypes().contains(type))
                 throw new DataNotFoundException("Type must be data, roaming, tra truoc, tra sau");
         }
         for (ProductDetail productDetail : productDTO.getProductDetails()) {
@@ -90,11 +86,7 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public Product updateProduct(ProductDTO productDTO, Long productId) throws Exception {
         for (String type : productDTO.getTypes()) {
-            if (!type.contains(ProductType.DATA)
-                    && !type.contains(ProductType.ROAMING)
-                    && !type.contains(ProductType.TRA_TRUOC)
-                    && !type.contains(ProductType.TRA_SAU)
-            )
+            if (!ProductType.getListProductTypes().contains(type))
                 throw new DataNotFoundException("Type must be data, roaming, tra truoc, tra sau");
         }
         Product existProduct = productRepository.findById(productId)
