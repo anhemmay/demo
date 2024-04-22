@@ -1,7 +1,8 @@
-package com.example.demo.models;
+package com.example.demo.model;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,10 +23,10 @@ public class ProductDetail {
 
     @ManyToOne
     @JoinColumn(name = "product_id")
-    @JsonBackReference
+    @JsonIgnore
     private Product product;
 
-    @Column(name = "product_code", unique = true)
+    @Column(name = "product_code")
     @JsonProperty("product_code")
     private String productCode;
 
@@ -38,6 +39,6 @@ public class ProductDetail {
     @Column(name = "cycle")
     private Integer cycle;
 
-    @Column(name = "status", columnDefinition = "boolean default true", insertable = false)
+    @Column(name = "status", columnDefinition = "boolean default true")
     private Boolean status;
 }

@@ -1,14 +1,14 @@
-package com.example.demo.services;
+package com.example.demo.service;
 
-import com.example.demo.dtos.ProductDTO;
-import com.example.demo.models.Product;
+import com.example.demo.dto.FilterRequest;
+import com.example.demo.dto.ProductDTO;
+import com.example.demo.model.Product;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-
 public interface IProductService {
-    Page<Product> getAllProduct(Boolean status, String productCode, String name, List<String> cycle, String type, Float minPrice, Float maxPrice, Pageable pageable);
+    Page<Product> getAllProducts(FilterRequest filterDTO, PageRequest pageRequest);
     Product insertProduct(ProductDTO productDTO) throws Exception;
     void deleteProduct(Long productId) throws Exception;
     Product getProductById(Long productId) throws Exception;

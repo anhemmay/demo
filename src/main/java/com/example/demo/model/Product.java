@@ -1,4 +1,4 @@
-package com.example.demo.models;
+package com.example.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,15 +29,13 @@ public class Product {
     @Column(name = "operator")
     private String operator;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<Type> type;
+    @Column(name = "types")
+    private String types;
 
-    @Column(name = "status", columnDefinition = "boolean default true", insertable = false)
+    @Column(name = "status", columnDefinition = "boolean default true")
     private Boolean status;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @OneToMany(mappedBy = "product")
     private List<ProductDetail> productDetails;
 
     @JsonProperty("created_at")
