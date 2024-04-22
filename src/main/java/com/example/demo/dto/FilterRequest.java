@@ -16,9 +16,9 @@ public class FilterRequest {
     @JsonProperty("name")
     private String name;
     @JsonProperty("cycles")
-    private List<String> cycles;
+    private List<Integer> cycles;
     @JsonProperty("types")
-    private List<String> types;
+    private String types;
     @JsonProperty("min_price")
     private Float minPrice;
     @JsonProperty("max_price")

@@ -19,14 +19,14 @@ public class ProductController {
     private final IProductService productService;
 
     @GetMapping
-    public ResponseEntity<Response<Page<Product>>> getAllProducts(@ModelAttribute FilterRequest filterRequest){
+    public ResponseEntity<Response<Page<Product>>> getAllProducts(@RequestBody FilterRequest filterRequest){
         PageRequest request = PageRequest.of(
                 filterRequest.getPage(),
                 filterRequest.getLimit(),
                 Sort.by("id").ascending()
         );
         Page<Product> productPage = productService.getAllProducts(filterRequest, request);
-        return ResponseEntity.ok().body(new Response<>("00","",productPage));
+        return ResponseEntity.ok().body(new Response<>("200","filter",productPage));
     }
 
 
@@ -37,7 +37,7 @@ public class ProductController {
         try{
             product = productService.getProductById(id);
             return ResponseEntity.ok().body(
-                    new Response<>("00","", product)
+                    new Response<>("200","get product by id", product)
             );
 
         }catch (Exception e){
@@ -53,7 +53,7 @@ public class ProductController {
         try {
             product = productService.insertProduct(productDTO);
             return ResponseEntity.ok().body(
-                    new Response<>("00", "insert product successfully",product)
+                    new Response<>("200", "insert product successfully",product)
             );
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
@@ -65,7 +65,7 @@ public class ProductController {
     public ResponseEntity<Response<Product>> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO){
         try {
             return ResponseEntity.ok().body(
-                    new Response<>("00", "Update Product Successfully",productService.updateProduct(productDTO, id))
+                    new Response<>("200", "Update Product Successfully",productService.updateProduct(productDTO, id))
             );
         }catch (Exception e){
             return ResponseEntity.badRequest().body(
@@ -79,7 +79,7 @@ public class ProductController {
         try {
             productService.deleteProduct(id);
             return ResponseEntity.ok().body(
-                    new Response<>("00","Delete Product Successfully", product)
+                    new Response<>("200","Delete Product Successfully", product)
             );
         } catch (Exception e) {
             return ResponseEntity.ok().body(
