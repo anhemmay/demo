@@ -1,9 +1,9 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.FilterRequest;
+import com.example.demo.dto.request.FilterRequest;
 import com.example.demo.dto.ProductDTO;
 import com.example.demo.model.Product;
-import com.example.demo.response.Response;
+import com.example.demo.dto.response.Response;
 import com.example.demo.service.IProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.*;
 public class ProductController {
     private final IProductService productService;
 
-    @GetMapping
+
+    @GetMapping("/filter")
     public ResponseEntity<Response<Page<Product>>> getAllProducts(@RequestBody FilterRequest filterRequest){
         PageRequest request = PageRequest.of(
                 filterRequest.getPage(),

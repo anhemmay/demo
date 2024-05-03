@@ -1,7 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.constant.ProductType;
-import com.example.demo.dto.FilterRequest;
+import com.example.demo.dto.request.FilterRequest;
 import com.example.demo.dto.ProductDTO;
 import com.example.demo.exception.DataNotFoundException;
 import com.example.demo.exception.ProductCodeExistedException;
@@ -10,17 +10,15 @@ import com.example.demo.model.ProductDetail;
 import com.example.demo.repository.ProductDetailRepository;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.service.IProductService;
+import com.example.demo.util.ConvertUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringJoiner;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -32,30 +30,29 @@ public class ProductServiceImpl implements IProductService {
     private final ModelMapper modelMapper;
 
     @Override
-    public Page<Product> getAllProducts(FilterRequest filterDTO, PageRequest pageRequest) {
-        return productRepository.findByFilter(filterDTO, pageRequest);
+    public Page<Product> getAllProducts(FilterRequest filterRequest, PageRequest pageRequest) {
+        return productRepository.findByFilter(filterRequest, pageRequest);
     }
 
     @Transactional
     @Override
     public Product insertProduct(ProductDTO productDTO) throws Exception {
-
-        for (String type : productDTO.getTypes()) {
-            if (!ProductType.getListProductTypes().contains(type))
-                throw new DataNotFoundException("Type must be data, roaming, tra truoc, tra sau");
+        if(!isProductType(productDTO)){
+            throw new DataNotFoundException("Type must be data, roaming, tra truoc, tra sau");
         }
+        productDTO.setTypes("," + productDTO.getTypes() + ",");
         for (ProductDetail productDetail : productDTO.getProductDetails()) {
             if (isProductCodeExistsInProduct(productDetail.getProductCode(), productDTO.getOperator())) {
                 throw new ProductCodeExistedException("Product code already exists");
             }
         }
-        Product newProduct = productRepository.save(transferToProduct(productDTO, new Product()));
+        Product newProduct = ConvertUtil.convertObject(productDTO, object -> modelMapper.map(object, Product.class));
         List<ProductDetail> productDetails = productDTO.getProductDetails();
         for(ProductDetail productDetail : productDTO.getProductDetails()){
             productDetail.setProduct(newProduct);
+            productDetailRepository.save(productDetail);
         }
-        productDetailRepository.saveAll(productDetails);
-        return newProduct;
+        return productRepository.save(newProduct);
     }
 
 
@@ -85,38 +82,52 @@ public class ProductServiceImpl implements IProductService {
     @Transactional
     @Override
     public Product updateProduct(ProductDTO productDTO, Long productId) throws Exception {
-        for (String type : productDTO.getTypes()) {
-            if (!ProductType.getListProductTypes().contains(type))
-                throw new DataNotFoundException("Type must be data, roaming, tra truoc, tra sau");
+        if(!isProductType(productDTO)){
+            throw new DataNotFoundException("Type must be data, roaming, tra truoc, tra sau");
         }
+        productDTO.setTypes("," + productDTO.getTypes() + ",");
         Product existProduct = productRepository.findById(productId)
                 .orElseThrow(() -> new DataNotFoundException(String.format("Cannot find product with id: %d", productId)));
         for(ProductDetail productDetail : productDTO.getProductDetails()){
+            boolean checkProductCode = isProductCodeExistsInProduct(productDetail.getProductCode(), productDTO.getOperator());
+            if(checkProductCode){
+                if(productDetail.getId() == null){
+                    throw new ProductCodeExistedException("Product code already exists");
+                }
+                else{
+                    Optional<ProductDetail> existProductDetail = productDetailRepository.findById(productDetail.getId());
+                    if(existProductDetail.isEmpty()){
+                        throw new DataNotFoundException(String.format("Cannot find product detail with id: %d", productDetail.getId()));
+                    }
+                    else if(!existProductDetail.get().getId().equals(productDetail.getId())){
+                        throw new DataNotFoundException("Product code already exists");
+                    }
+                }
+            }
+
             productDetail.setProduct(existProduct);
+            productDetailRepository.save(productDetail);
         }
-        productDetailRepository.saveAll(productDTO.getProductDetails());
-        return productRepository.save(transferToProduct(productDTO, existProduct));
+        ConvertUtil.convertObject(productDTO, object -> {
+            modelMapper.map(object, existProduct);
+            return existProduct;
+        });
+        return productRepository.save(existProduct);
     }
 
     private Boolean isProductCodeExistsInProduct(String productCode, String productOperator) {
         return productDetailRepository.existsByProductCodeAndProduct_Operator(productCode, productOperator);
     }
 
-    private Product transferToProduct(ProductDTO productDTO, Product product){
-        StringJoiner stringJoiner = new StringJoiner(",");
-        for(String type : productDTO.getTypes()){
-            stringJoiner.add(type);
+
+    private Boolean isProductType(ProductDTO productDTO){
+        List<String> typesList = List.of(productDTO.getTypes().split(","));
+        for (String type : typesList) {
+            if (!ProductType.getListProductTypes().contains(type)){
+                return false;
+            }
         }
-
-        modelMapper.map(productDTO, product);
-        product.setTypes(stringJoiner.toString());
-        return product;
+        return true;
     }
 
-    private ProductDTO transferToProductDTO(Product product, ProductDTO productDTO){
-        modelMapper.map(product, productDTO);
-        List<String> types = List.of(product.getTypes().split(","));
-        productDTO.setTypes(types);
-        return productDTO;
-    }
 }

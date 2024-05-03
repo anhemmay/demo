@@ -16,7 +16,7 @@ import java.util.List;
 public class ProductDTO {
     private String name;
     private String operator;
-    private List<String> types;
+    private String types;
     private Boolean status;
     @JsonProperty("product_details")
     private List<ProductDetail> productDetails;
