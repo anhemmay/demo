@@ -8,6 +8,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.util.Pair;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,11 +21,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
+@Order(value = 2)
 public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final UserDetailsService userDetailsService;
@@ -66,12 +67,15 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Pair.of("/api/user/login", "POST"),
                 Pair.of("/api/user/register", "POST"),
                 Pair.of("/api/products/filter", "GET"),
-                Pair.of("/swagger-ui/**", "GET")
+                Pair.of("/api/products", "GET"),
+                Pair.of("/api-docs", "GET"),
+                Pair.of("/swagger-ui", "GET")
         );
         String path = request.getServletPath();
         String method = request.getMethod();
         return byPassList
                 .stream()
-                .anyMatch(pair -> pair.getFirst().contains(path) && pair.getSecond().equals(method));
+                .anyMatch(pair -> path.contains(pair.getFirst()) && method.equals(pair.getSecond()));
     }
 }
+
