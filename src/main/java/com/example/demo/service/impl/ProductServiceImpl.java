@@ -2,7 +2,7 @@ package com.example.demo.service.impl;
 
 import com.example.demo.constant.ProductType;
 import com.example.demo.dto.request.FilterRequest;
-import com.example.demo.dto.ProductDTO;
+import com.example.demo.dto.request.ProductDTO;
 import com.example.demo.exception.DataNotFoundException;
 import com.example.demo.exception.ProductCodeExistedException;
 import com.example.demo.model.Product;

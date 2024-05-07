@@ -2,14 +2,17 @@ package com.example.demo.service.impl;
 
 import com.example.demo.dto.request.LoginDTO;
 import com.example.demo.dto.request.RegisterDTO;
+import com.example.demo.dto.request.UserDTO;
 import com.example.demo.exception.DataNotFoundException;
 import com.example.demo.model.Role;
 import com.example.demo.model.User;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.IUserService;
+import com.example.demo.util.ConvertUtil;
 import com.example.demo.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -29,6 +32,7 @@ public class UserServiceImpl implements IUserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public String login(LoginDTO loginDTO) throws Exception {
@@ -67,6 +71,25 @@ public class UserServiceImpl implements IUserService {
 
 
         return userRepository.save(user);
+    }
+
+    @Transactional
+    @Override
+    public User updateUser(UserDTO userDTO, Long userId) throws Exception {
+        User existUser = userRepository
+                .findById(userId)
+                .orElseThrow(() -> new DataNotFoundException("Cannot find user with id: " + userId));
+        Role role = roleRepository
+                .findById(userDTO.getRoleId())
+                .orElseThrow(() -> new DataNotFoundException("Cannot find user with id: " + userDTO.getRoleId()));
+        if(userDTO.getFirstName() != null){
+            existUser.setFirstName(userDTO.getFirstName());
+        }
+        if(userDTO.getLastName() != null){
+            existUser.setLastName(userDTO.getLastName());
+        }
+        existUser.setRole(role);
+        return userRepository.save(existUser);
     }
 
 }

@@ -18,28 +18,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityFilter {
     private final SimpleCorsFilter simpleCorsFilter;
     private final JwtTokenFilter jwtTokenFilter;
-
+    private final DynamicAuthorityFilter dynamicAuthorityFilter;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(dynamicAuthorityFilter, JwtTokenFilter.class)
                 .addFilterBefore(simpleCorsFilter, JwtTokenFilter.class)
-                .authorizeHttpRequests(request -> {
-                    request.requestMatchers(
-                            "/api/user/login",
-                                    "/api/user/register",
-                                    "/api-docs/**",
-                                    "/swagger-ui/**"
-                            ).permitAll()
-
-                            .requestMatchers(HttpMethod.GET, "/api/products/filter").permitAll()
-                            .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
-                            .requestMatchers(HttpMethod.POST, "/api/products").hasRole(Role.ADMIN)
-                            .requestMatchers(HttpMethod.PUT, "/api/products/**").hasRole(Role.ADMIN)
-                            .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole(Role.ADMIN)
-                            .anyRequest().authenticated();
-                })
                 .build();
     }
 }

@@ -2,15 +2,13 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.request.LoginDTO;
 import com.example.demo.dto.request.RegisterDTO;
+import com.example.demo.dto.request.UserDTO;
 import com.example.demo.dto.response.Response;
 import com.example.demo.model.User;
 import com.example.demo.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,7 +29,7 @@ public class UserController {
         }
     }
     @PostMapping("/register")
-    public ResponseEntity<Response<?>> register(@RequestBody RegisterDTO registerDTO){
+    public ResponseEntity<Response<User>> register(@RequestBody RegisterDTO registerDTO){
         try{
             User user = userService.register(registerDTO);
             return ResponseEntity.ok().body(
@@ -40,6 +38,19 @@ public class UserController {
         }catch (Exception e){
             return ResponseEntity.badRequest().body(
                     new Response<>("400", e.getMessage())
+            );
+        }
+    }
+    @PutMapping
+    public ResponseEntity<Response<User>> updateUser(@RequestBody UserDTO userDTO, Long userId){
+        try{
+            User user = userService.updateUser(userDTO, userId);
+            return ResponseEntity.ok().body(
+                    new Response<>("200", "success",user)
+            );
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(
+              new Response<>("403", e.getMessage())
             );
         }
     }

@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.request.FilterRequest;
-import com.example.demo.dto.ProductDTO;
+import com.example.demo.dto.request.ProductDTO;
 import com.example.demo.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

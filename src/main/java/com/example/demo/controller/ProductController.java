@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.request.FilterRequest;
-import com.example.demo.dto.ProductDTO;
+import com.example.demo.dto.request.ProductDTO;
 import com.example.demo.model.Product;
 import com.example.demo.dto.response.Response;
 import com.example.demo.service.IProductService;

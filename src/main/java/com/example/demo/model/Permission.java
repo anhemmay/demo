@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,21 +14,16 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Builder
-@Table(name = "role")
-public class Role {
+@Table(name = "permission")
+public class Permission {
     @Id
+    @Column(name = "id", unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
-    private String name;
+    private String url;
 
-    private Boolean status;
-
-    @OneToMany(mappedBy = "role")
+    @OneToMany(mappedBy = "permission")
+    @JsonIgnore
     private List<RolePermission> rolePermissionList;
-
-
-    public static final String ADMIN = "ADMIN";
-    public static final String USER = "USER";
 }
