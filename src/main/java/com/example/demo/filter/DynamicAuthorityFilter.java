@@ -1,12 +1,8 @@
 package com.example.demo.filter;
 
-import com.example.demo.model.Role;
 import com.example.demo.model.RolePermission;
 import com.example.demo.model.User;
-import com.example.demo.repository.PermissionRepository;
-import com.example.demo.repository.RolePermissionRepository;
-import com.example.demo.repository.RoleRepository;
-import com.example.demo.repository.UserRepository;
+
 import com.example.demo.service.IRolePermissionService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
