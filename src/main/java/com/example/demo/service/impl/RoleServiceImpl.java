@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -64,24 +65,7 @@ public class RoleServiceImpl implements IRoleService {
         return roleRepository.save(existRole);
     }
 
-    @Transactional
-    @Override
-    public Role addRolePermissionToRole(RolePermissionDTO rolePermissionDTO) throws DataNotFoundException {
-        RolePermission newRolePermission = new RolePermission();
-        newRolePermission.setAuthority(rolePermissionDTO.getAuthority());
 
-        Role existRole = roleRepository
-                .findById(rolePermissionDTO.getRoleId())
-                .orElseThrow(() -> new DataNotFoundException("Cannot find role"));
-        Permission existPermission = permissionRepository
-                .findById(rolePermissionDTO.getPermissionId())
-                .orElseThrow(() -> new DataNotFoundException("Cannot find permission"));
-        newRolePermission.setRole(existRole);
-        newRolePermission.setPermission(existPermission);
-
-        rolePermissionRepository.save(newRolePermission);
-        return roleRepository.findById(rolePermissionDTO.getRoleId()).get();
-    }
 
 
     @Transactional

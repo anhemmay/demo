@@ -13,6 +13,5 @@ public interface IRoleService {
     Role createRole(RoleDTO roleDTO) throws Exception;
     Role updateRole(Long roleId, RoleDTO roleDTO) throws DataNotFoundException;
     void deleteRole(Long roleId) throws DataNotFoundException;
-    Role addRolePermissionToRole(RolePermissionDTO rolePermissionDTO) throws DataNotFoundException;
 
 }

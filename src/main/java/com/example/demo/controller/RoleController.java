@@ -5,6 +5,8 @@ import com.example.demo.dto.request.RoleDTO;
 import com.example.demo.dto.request.RolePermissionDTO;
 import com.example.demo.dto.response.Response;
 import com.example.demo.model.Role;
+import com.example.demo.model.RolePermission;
+import com.example.demo.service.IRolePermissionService;
 import com.example.demo.service.IRoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import java.util.List;
 @RequestMapping("api/role")
 public class RoleController {
     private final IRoleService roleService;
+    private final IRolePermissionService rolePermissionService;
 
     @GetMapping
     public ResponseEntity<Response<List<Role>>> getRoles(){
@@ -74,11 +77,11 @@ public class RoleController {
         }
     }
 
-    @PostMapping("/addRolePermissionToRole")
-    public ResponseEntity<Response<Role>> addRolePermission(@RequestBody RolePermissionDTO rolePermissionDTO){
+    @PostMapping("/add-role-permission-to-role")
+    public ResponseEntity<Response<RolePermission>> addRolePermission(@RequestBody RolePermissionDTO rolePermissionDTO){
         try{
-        Role role = roleService.addRolePermissionToRole(rolePermissionDTO);
-            return ResponseEntity.ok().body(new Response<>("200", "success", role));
+        RolePermission rolePermission = rolePermissionService.addRolePermissionToRole(rolePermissionDTO);
+            return ResponseEntity.ok().body(new Response<>("200", "success", rolePermission));
         }catch (Exception e){
             return ResponseEntity.badRequest().body(new Response<>("403", e.getMessage()));
         }
