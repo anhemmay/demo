@@ -21,6 +21,7 @@ public class Permission {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "url", unique = true)
     private String url;
 
     @OneToMany(mappedBy = "permission")

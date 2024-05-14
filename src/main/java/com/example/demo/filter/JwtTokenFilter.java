@@ -63,10 +63,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     }
 
     private final List<Pair<String, String>> byPassList = Arrays.asList(
-            Pair.of("/api/user/login", "POST"),
-            Pair.of("/api/user/register", "POST"),
-            Pair.of("/api/products/filter", "GET"),
-            Pair.of("/api/products", "GET"),
+            Pair.of("/api/v1/user/login", "POST"),
+            Pair.of("/api/v1/user/register", "POST"),
+            Pair.of("/api/v1/products/filter", "POST"),
+            Pair.of("/api/v1/products", "GET"),
             Pair.of("/api-docs", "GET"),
             Pair.of("/swagger-ui", "GET")
     );

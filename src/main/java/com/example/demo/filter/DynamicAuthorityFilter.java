@@ -36,16 +36,16 @@ public class DynamicAuthorityFilter extends OncePerRequestFilter {
             return;
         }
         User user = (User) authentication.getPrincipal();
-        String requestPath =  request.getServletPath().replace("/api/","");
-        String requestMethod = request.getMethod();
+        if(user.getRole().getName().equals("ADMIN") && user.getRole().getStatus()){
+            filterChain.doFilter(request, response);
+            return;
+        }
+        String requestPath = request.getRequestURI();
         List<RolePermission> rolePermissionList = rolePermissionService.findAllByRoleId(user.getRole().getId());
         for(RolePermission rolePermission : rolePermissionList){
-            if(requestPath.contains(rolePermission.getPermission().getUrl())){
-                if(rolePermission.getAuthority().contains(requestMethod)){
-                    filterChain.doFilter(request, response);
-                    return;
-                }
-                break;
+            if(requestPath.equals(rolePermission.getPermission().getUrl())){
+                filterChain.doFilter(request, response);
+                return;
             }
         }
         response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "Method Not Allow");

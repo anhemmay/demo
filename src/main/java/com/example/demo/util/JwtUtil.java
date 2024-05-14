@@ -27,13 +27,12 @@ public class JwtUtil {
         claims.put("firstName", user.getFirstName());
         claims.put("lastName", user.getLastName());
         claims.put("role", user.getRole().getName());
-        String jwtToken = Jwts.builder()
+        return Jwts.builder()
                 .addClaims(claims)
                 .setSubject(user.getUsername())
                 .setExpiration(new Date(System.currentTimeMillis() + 24*60*60*1000L))
                 .signWith(getKey(secretKey), SignatureAlgorithm.HS512)
                 .compact();
-        return jwtToken;
     }
 
     public Claims getAllClaims(String token){

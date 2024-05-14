@@ -16,6 +16,4 @@ public class UserDTO {
     private String firstName;
     @JsonProperty("last_name")
     private String lastName;
-    @JsonProperty("role_id")
-    private Long roleId;
 }

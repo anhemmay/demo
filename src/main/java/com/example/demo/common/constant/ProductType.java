@@ -1,4 +1,4 @@
-package com.example.demo.constant;
+package com.example.demo.common.constant;
 
 import java.util.Arrays;
 import java.util.List;

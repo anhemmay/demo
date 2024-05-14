@@ -12,9 +12,12 @@ import com.example.demo.service.IUserService;
 import com.example.demo.util.ConvertUtil;
 import com.example.demo.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.apache.kafka.common.errors.AuthorizationException;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -76,19 +79,20 @@ public class UserServiceImpl implements IUserService {
     @Transactional
     @Override
     public User updateUser(UserDTO userDTO, Long userId) throws Exception {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User loginUSer = (User) authentication.getPrincipal();
+        if(!loginUSer.getId().equals(userId)){
+            throw new AuthorizationException("Access not allowed");
+        }
         User existUser = userRepository
                 .findById(userId)
                 .orElseThrow(() -> new DataNotFoundException("Cannot find user with id: " + userId));
-        Role role = roleRepository
-                .findById(userDTO.getRoleId())
-                .orElseThrow(() -> new DataNotFoundException("Cannot find user with id: " + userDTO.getRoleId()));
         if(userDTO.getFirstName() != null){
             existUser.setFirstName(userDTO.getFirstName());
         }
         if(userDTO.getLastName() != null){
             existUser.setLastName(userDTO.getLastName());
         }
-        existUser.setRole(role);
         return userRepository.save(existUser);
     }
 

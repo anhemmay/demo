@@ -23,9 +23,6 @@ public class RolePermission {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "authority")
-    private String authority;
-
     @ManyToOne
     @JoinColumn(name = "role_id")
     @JsonIgnore
@@ -34,14 +31,5 @@ public class RolePermission {
     @ManyToOne
     @JoinColumn(name = "permission_id")
     private Permission permission;
-
-    public static final String CREATE_AUTHORITY = "POST";
-    public static final String READ_AUTHORITY = "GET";
-    public static final String UPDATE_AUTHORITY = "PUT";
-    public static final String DELETE_AUTHORITY = "DELETE";
-
-    public static final List<String> permissions = Arrays.asList(
-            CREATE_AUTHORITY, READ_AUTHORITY, UPDATE_AUTHORITY, DELETE_AUTHORITY
-    );
 
 }

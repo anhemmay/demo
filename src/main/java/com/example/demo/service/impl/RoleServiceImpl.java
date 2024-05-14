@@ -24,8 +24,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RoleServiceImpl implements IRoleService {
     private final RoleRepository roleRepository;
-    private final PermissionRepository permissionRepository;
-    private final RolePermissionRepository rolePermissionRepository;
     private final ModelMapper modelMapper;
 
     @Override

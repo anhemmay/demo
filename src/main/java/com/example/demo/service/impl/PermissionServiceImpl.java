@@ -9,6 +9,7 @@ import com.example.demo.util.ConvertUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,12 +19,14 @@ public class PermissionServiceImpl implements IPermissionService {
 
     private final ModelMapper modelMapper;
 
+    @Transactional
     @Override
     public Permission createPermission(PermissionDTO permissionDTO) {
         Permission newPermission = ConvertUtil.convertObject(permissionDTO, object -> modelMapper.map(object, Permission.class));
         return permissionRepository.save(newPermission);
     }
 
+    @Transactional
     @Override
     public Permission updatePermission(Long permissionId, PermissionDTO permissionDTO) throws DataNotFoundException {
         Permission existPermission = permissionRepository
@@ -36,9 +39,11 @@ public class PermissionServiceImpl implements IPermissionService {
         return permissionRepository.save(existPermission);
     }
 
+    @Transactional
     @Override
-    public void deletePermission(Long permissionId) {
-
+    public void deletePermission(Long permissionId) throws DataNotFoundException {
+        Permission existPermission = permissionRepository.findById(permissionId)
+                .orElseThrow(() -> new DataNotFoundException("Cannot find permission with id:" + permissionId));
     }
 
 

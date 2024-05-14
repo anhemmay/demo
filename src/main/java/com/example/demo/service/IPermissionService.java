@@ -7,5 +7,5 @@ import com.example.demo.model.Permission;
 public interface IPermissionService {
     Permission createPermission(PermissionDTO permissionDTO);
     Permission updatePermission(Long permissionId, PermissionDTO permissionDTO) throws DataNotFoundException;
-    void deletePermission(Long permissionId);
+    void deletePermission(Long permissionId) throws DataNotFoundException;
 }

@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.common.constant.ResponseConstant;
 import com.example.demo.dto.request.LoginDTO;
 import com.example.demo.dto.request.RegisterDTO;
 import com.example.demo.dto.request.UserDTO;
@@ -10,9 +11,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static com.example.demo.common.constant.ResponseConstant.ERROR_CODE;
+import static com.example.demo.common.constant.ResponseConstant.SUCCESS_CODE;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user")
+@RequestMapping("/api/v1/user")
 public class UserController {
     private final IUserService userService;
     @PostMapping("/login")
@@ -20,11 +24,11 @@ public class UserController {
         try{
             String token = userService.login(loginDTO);
             return ResponseEntity.ok().body(
-                    new Response<>("200", "", token)
+                    new Response<>(SUCCESS_CODE, "", token)
             );
         }catch (Exception e){
             return ResponseEntity.badRequest().body(
-                    new Response<>("400", e.getMessage())
+                    new Response<>(ERROR_CODE, e.getMessage())
             );
         }
     }
@@ -33,24 +37,24 @@ public class UserController {
         try{
             User user = userService.register(registerDTO);
             return ResponseEntity.ok().body(
-                    new Response<>("200", "register successfully", user)
+                    new Response<>(SUCCESS_CODE, "register successfully", user)
             );
         }catch (Exception e){
             return ResponseEntity.badRequest().body(
-                    new Response<>("400", e.getMessage())
+                    new Response<>(ERROR_CODE, e.getMessage())
             );
         }
     }
-    @PutMapping
-    public ResponseEntity<Response<User>> updateUser(@RequestBody UserDTO userDTO, Long userId){
+    @PutMapping("/update-user")
+    public ResponseEntity<Response<User>> updateUser(@RequestParam Long userId, @RequestBody UserDTO userDTO){
         try{
             User user = userService.updateUser(userDTO, userId);
             return ResponseEntity.ok().body(
-                    new Response<>("200", "success",user)
+                    new Response<>(SUCCESS_CODE, "success",user)
             );
         }catch (Exception e){
             return ResponseEntity.badRequest().body(
-              new Response<>("403", e.getMessage())
+              new Response<>(ERROR_CODE, e.getMessage())
             );
         }
     }

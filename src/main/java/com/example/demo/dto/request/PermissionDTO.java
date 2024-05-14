@@ -10,6 +10,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PermissionDTO {
-    private Integer id;
+    private Long id;
     private String url;
 }

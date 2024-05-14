@@ -40,11 +40,9 @@ public class RolePermissionServiceImpl implements IRolePermissionService {
         Optional<RolePermission> optionalRolePermission = rolePermissionRepository.findByRoleAndPermission(existRole, existPermission);
         if (optionalRolePermission.isPresent()) {
             RolePermission existRolePermission = optionalRolePermission.get();
-            existRolePermission.setAuthority(rolePermissionDTO.getAuthority());
             return rolePermissionRepository.save(existRolePermission);
         } else {
             RolePermission newRolePermission = new RolePermission();
-            newRolePermission.setAuthority(rolePermissionDTO.getAuthority());
             newRolePermission.setRole(existRole);
             newRolePermission.setPermission(existPermission);
             return rolePermissionRepository.save(newRolePermission);

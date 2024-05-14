@@ -11,7 +11,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RolePermissionDTO {
-    private String authority;
     @JsonProperty("role_id")
     private Long roleId;
     @JsonProperty("permission_id")

@@ -1,6 +1,6 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.constant.ProductType;
+import com.example.demo.common.constant.ProductType;
 import com.example.demo.dto.request.FilterRequest;
 import com.example.demo.dto.request.ProductDTO;
 import com.example.demo.exception.DataNotFoundException;
@@ -14,7 +14,7 @@ import com.example.demo.util.ConvertUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,8 +30,8 @@ public class ProductServiceImpl implements IProductService {
     private final ModelMapper modelMapper;
 
     @Override
-    public Page<Product> getAllProducts(FilterRequest filterRequest, PageRequest pageRequest) {
-        return productRepository.findByFilter(filterRequest, pageRequest);
+    public Page<Product> getAllProducts(FilterRequest filterRequest, Pageable pageable) {
+        return productRepository.findByFilter(filterRequest, pageable);
     }
 
     @Transactional
