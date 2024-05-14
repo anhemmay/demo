@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.common.constant.ResponseMessage;
 import com.example.demo.dto.request.LoginDTO;
 import com.example.demo.dto.request.RegisterDTO;
 import com.example.demo.dto.request.UserDTO;
@@ -26,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.security.auth.login.AccountLockedException;
 import java.util.Optional;
 
+import static com.example.demo.common.constant.ResponseMessage.*;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements IUserService {
@@ -40,12 +43,12 @@ public class UserServiceImpl implements IUserService {
     @Override
     public String login(LoginDTO loginDTO) throws Exception {
         User user = userRepository.findByUsername(loginDTO.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("Wrong username or password"));
+                .orElseThrow(() -> new UsernameNotFoundException(WRONG_USERNAME_PASSWORD));
         if(!user.isActive()){
-            throw new AccountLockedException("account has been looked");
+            throw new AccountLockedException(USER_IS_LOOKED);
         }
         if(!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())){
-            throw new UsernameNotFoundException("Wrong username or password");
+            throw new UsernameNotFoundException(WRONG_USERNAME_PASSWORD);
         }
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword(), user.getAuthorities()));
         return jwtUtil.generateToken(user);
@@ -55,11 +58,11 @@ public class UserServiceImpl implements IUserService {
     @Override
     public User register(RegisterDTO registerDTO) throws Exception {
         if(!registerDTO.getPassword().equals(registerDTO.getRetypePassword())){
-            throw new DataNotFoundException("Password and retype password are not matches");
+            throw new DataNotFoundException(PASSWORD_NOT_MATCH);
         }
         Optional<User> existingUser = userRepository.findByUsername(registerDTO.getUsername());
         if(existingUser.isPresent()){
-            throw new DataNotFoundException("username is existing");
+            throw new DataNotFoundException(USERNAME_IS_EXISTS);
         }
         Role role = roleRepository.findByName(Role.USER);
         User user = User
@@ -82,7 +85,7 @@ public class UserServiceImpl implements IUserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User loginUSer = (User) authentication.getPrincipal();
         if(!loginUSer.getId().equals(userId)){
-            throw new AuthorizationException("Access not allowed");
+            throw new AuthorizationException(NOT_ALLOWED);
         }
         User existUser = userRepository
                 .findById(userId)

@@ -20,6 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+import static com.example.demo.common.constant.ResponseMessage.PRODUCT_CODE_EXISTS;
+import static com.example.demo.common.constant.ResponseMessage.WRONG_TYPE;
+
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements IProductService {
@@ -38,12 +41,12 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public Product insertProduct(ProductDTO productDTO) throws Exception {
         if(!isProductType(productDTO)){
-            throw new DataNotFoundException("Type must be data, roaming, tra truoc, tra sau");
+            throw new DataNotFoundException(WRONG_TYPE);
         }
         productDTO.setTypes("," + productDTO.getTypes() + ",");
         for (ProductDetail productDetail : productDTO.getProductDetails()) {
             if (isProductCodeExistsInProduct(productDetail.getProductCode(), productDTO.getOperator())) {
-                throw new ProductCodeExistedException("Product code already exists");
+                throw new ProductCodeExistedException(PRODUCT_CODE_EXISTS);
             }
         }
         Product newProduct = ConvertUtil.convertObject(productDTO, object -> modelMapper.map(object, Product.class));
@@ -83,7 +86,7 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public Product updateProduct(ProductDTO productDTO, Long productId) throws Exception {
         if(!isProductType(productDTO)){
-            throw new DataNotFoundException("Type must be data, roaming, tra truoc, tra sau");
+            throw new DataNotFoundException(WRONG_TYPE);
         }
         productDTO.setTypes("," + productDTO.getTypes() + ",");
         Product existProduct = productRepository.findById(productId)
@@ -92,7 +95,7 @@ public class ProductServiceImpl implements IProductService {
             boolean checkProductCode = isProductCodeExistsInProduct(productDetail.getProductCode(), productDTO.getOperator());
             if(checkProductCode){
                 if(productDetail.getId() == null){
-                    throw new ProductCodeExistedException("Product code already exists");
+                    throw new ProductCodeExistedException(PRODUCT_CODE_EXISTS );
                 }
                 else{
                     Optional<ProductDetail> existProductDetail = productDetailRepository.findById(productDetail.getId());
@@ -100,7 +103,7 @@ public class ProductServiceImpl implements IProductService {
                         throw new DataNotFoundException(String.format("Cannot find product detail with id: %d", productDetail.getId()));
                     }
                     else if(!existProductDetail.get().getId().equals(productDetail.getId())){
-                        throw new DataNotFoundException("Product code already exists");
+                        throw new DataNotFoundException(PRODUCT_CODE_EXISTS);
                     }
                 }
             }

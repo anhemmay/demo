@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 
-import com.example.demo.common.constant.ResponseConstant;
 import com.example.demo.dto.request.RoleDTO;
 import com.example.demo.dto.request.RolePermissionDTO;
 import com.example.demo.dto.response.Response;
@@ -15,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.example.demo.common.constant.ResponseConstant.ERROR_CODE;
-import static com.example.demo.common.constant.ResponseConstant.SUCCESS_CODE;
+import static com.example.demo.common.constant.ResponseCode.ERROR_CODE;
+import static com.example.demo.common.constant.ResponseCode.SUCCESS_CODE;
 
 @RestController
 @RequiredArgsConstructor
@@ -85,7 +84,7 @@ public class RoleController {
     public ResponseEntity<Response<RolePermission>> addRolePermission(@RequestBody RolePermissionDTO rolePermissionDTO){
         try{
         RolePermission rolePermission = rolePermissionService.addRolePermissionToRole(rolePermissionDTO);
-            return ResponseEntity.ok().body(new Response<>(SUCCESS_CODE, "success", rolePermission));
+            return ResponseEntity.ok().body(new Response<>(SUCCESS_CODE, "successfully", rolePermission));
         }catch (Exception e){
             return ResponseEntity.badRequest().body(new Response<>(ERROR_CODE, e.getMessage()));
         }

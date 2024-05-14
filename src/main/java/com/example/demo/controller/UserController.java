@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.common.constant.ResponseConstant;
+import com.example.demo.common.constant.ResponseMessage;
 import com.example.demo.dto.request.LoginDTO;
 import com.example.demo.dto.request.RegisterDTO;
 import com.example.demo.dto.request.UserDTO;
@@ -11,8 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static com.example.demo.common.constant.ResponseConstant.ERROR_CODE;
-import static com.example.demo.common.constant.ResponseConstant.SUCCESS_CODE;
+import static com.example.demo.common.constant.ResponseCode.ERROR_CODE;
+import static com.example.demo.common.constant.ResponseCode.SUCCESS_CODE;
+import static com.example.demo.common.constant.ResponseMessage.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,7 +25,7 @@ public class UserController {
         try{
             String token = userService.login(loginDTO);
             return ResponseEntity.ok().body(
-                    new Response<>(SUCCESS_CODE, "", token)
+                    new Response<>(SUCCESS_CODE, LOGIN_SUCCESSFULLY, token)
             );
         }catch (Exception e){
             return ResponseEntity.badRequest().body(
@@ -37,7 +38,7 @@ public class UserController {
         try{
             User user = userService.register(registerDTO);
             return ResponseEntity.ok().body(
-                    new Response<>(SUCCESS_CODE, "register successfully", user)
+                    new Response<>(SUCCESS_CODE, REGISTER_SUCCESSFULLY, user)
             );
         }catch (Exception e){
             return ResponseEntity.badRequest().body(
@@ -50,7 +51,7 @@ public class UserController {
         try{
             User user = userService.updateUser(userDTO, userId);
             return ResponseEntity.ok().body(
-                    new Response<>(SUCCESS_CODE, "success",user)
+                    new Response<>(SUCCESS_CODE, UPDATE_USER_SUCCESSFULLY,user)
             );
         }catch (Exception e){
             return ResponseEntity.badRequest().body(

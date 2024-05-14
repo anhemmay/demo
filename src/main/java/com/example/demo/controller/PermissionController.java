@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import com.example.demo.common.constant.ResponseConstant;
 import com.example.demo.dto.request.PermissionDTO;
 import com.example.demo.dto.response.Response;
 import com.example.demo.model.Permission;
@@ -9,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static com.example.demo.common.constant.ResponseConstant.*;
+import static com.example.demo.common.constant.ResponseCode.*;
 
 @RestController
 @RequiredArgsConstructor
