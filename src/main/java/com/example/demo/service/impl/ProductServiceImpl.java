@@ -13,6 +13,7 @@ import com.example.demo.service.IProductService;
 import com.example.demo.util.ConvertUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,7 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Transactional
+//    @CachePut(value = "products", key = "#result.id")
     @Override
     public Product insertProduct(ProductDTO productDTO) throws Exception {
         if(!isProductType(productDTO)){
