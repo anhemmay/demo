@@ -21,6 +21,9 @@
     <logger name="com.example.demo.controller" level="ERROR" additivity="false">
         <appender-ref ref="CONTROLLER_DAILY" />
     </logger>
+    <logger name="com.example.demo.service" level="ERROR" additivity="false">
+        <appender-ref ref="CONTROLLER_DAILY" />
+    </logger>
 
     <root level="INFO">
         <appender-ref ref="CONSOLE" />

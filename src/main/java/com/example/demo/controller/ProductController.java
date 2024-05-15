@@ -2,15 +2,11 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.request.FilterRequest;
 import com.example.demo.dto.request.ProductDTO;
-import com.example.demo.model.Product;
 import com.example.demo.dto.response.Response;
+import com.example.demo.model.Product;
 import com.example.demo.service.IProductService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +18,10 @@ import static com.example.demo.common.constant.ResponseMessage.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/products")
+@Slf4j
 public class ProductController {
     private final IProductService productService;
 
-    private final Logger logger= LoggerFactory.getLogger(ProductController.class);
 
     @PostMapping("/filter")
     public ResponseEntity<Response<Page<Product>>> getAllProducts(@RequestBody FilterRequest filterRequest,
@@ -44,7 +40,7 @@ public class ProductController {
 //    @Cacheable(value = "products", key = "#id")
     @GetMapping("/get-product-by-id")
     public ResponseEntity<Response<Product>> getProductById(@RequestParam Long id){
-        logger.error("hello thang");
+        log.error("hello controller");
         Product product = new Product();
         try{
             product = productService.getProductById(id);

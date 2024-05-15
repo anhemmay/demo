@@ -1,2 +1,2 @@
-10:32:22 [http-nio-8080-exec-1] ERROR c.e.d.controller.ProductController - hello thang
-10:32:40 [http-nio-8080-exec-2] ERROR c.e.d.controller.ProductController - hello thang
+11:00:16 [http-nio-8080-exec-1] ERROR c.e.d.controller.ProductController - hello controller
+11:00:16 [http-nio-8080-exec-1] ERROR c.e.d.s.impl.ProductServiceImpl - log service

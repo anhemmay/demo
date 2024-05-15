@@ -12,7 +12,10 @@ import com.example.demo.repository.ProductRepository;
 import com.example.demo.service.IProductService;
 import com.example.demo.util.ConvertUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,12 +29,14 @@ import static com.example.demo.common.constant.ResponseMessage.WRONG_TYPE;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductServiceImpl implements IProductService {
     private final ProductRepository productRepository;
 
     private final ProductDetailRepository productDetailRepository;
 
     private final ModelMapper modelMapper;
+
 
     @Override
     public Page<Product> getAllProducts(FilterRequest filterRequest, Pageable pageable) {
@@ -80,6 +85,7 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public Product getProductById(Long productId) throws Exception {
+        log.error("log service");
         return productRepository.findById(productId)
                 .orElseThrow(() -> new DataNotFoundException(String.format("Cannot find product with id: %d", productId)));
     }
