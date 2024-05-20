@@ -44,7 +44,7 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Transactional
-//    @CachePut(value = "products", key = "#result.id")
+    @CachePut(value = "products", key = "#result.id")
     @Override
     public Product insertProduct(ProductDTO productDTO) throws Exception {
         if(!isProductType(productDTO)){

@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -14,7 +15,7 @@ import java.util.List;
 @Data
 @Builder
 @Table(name = "role")
-public class Role {
+public class Role  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,6 +29,6 @@ public class Role {
     private List<RolePermission> rolePermissionList;
 
 
-    public static final String ADMIN = "ADMIN";
-    public static final String USER = "USER";
+    public static final String ADMIN = "admin";
+    public static final String USER = "user";
 }

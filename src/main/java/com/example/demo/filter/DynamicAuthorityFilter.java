@@ -1,5 +1,6 @@
 package com.example.demo.filter;
 
+import com.example.demo.model.Role;
 import com.example.demo.model.RolePermission;
 import com.example.demo.model.User;
 
@@ -36,7 +37,7 @@ public class DynamicAuthorityFilter extends OncePerRequestFilter {
             return;
         }
         User user = (User) authentication.getPrincipal();
-        if(user.getRole().getName().equals("ADMIN") && user.getRole().getStatus()){
+        if(user.getRole().getName().equals(Role.ADMIN) && user.getRole().getStatus()){
             filterChain.doFilter(request, response);
             return;
         }
