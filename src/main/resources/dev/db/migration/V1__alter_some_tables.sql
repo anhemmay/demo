@@ -1,0 +1,7 @@
+ALTER TABLE products MODIFY name VARCHAR(50);
+
+ALTER TABLE product_detail MODIFY price DECIMAL(10,2);
+
+ALTER TABLE user MODIFY username VARCHAR(15);
+
+ALTER TABLE user ALTER COLUMN role_id SET DEFAULT 1;

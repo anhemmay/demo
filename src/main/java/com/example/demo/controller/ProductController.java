@@ -40,7 +40,7 @@ public class ProductController {
 
     }
 
-    @Cacheable(value = "products", key = "#id")
+//    @Cacheable(value = "products", key = "#id")
     @GetMapping("/get-product-by-id")
     public ResponseEntity<Response<Product>> getProductById(@RequestParam Long id){
         log.error("hello controller");
@@ -72,7 +72,7 @@ public class ProductController {
             );
         }
     }
-    @CachePut(value = "products", key = "#id")
+//    @CachePut(value = "products", key = "#id")
     @PutMapping("/update-product")
     public ResponseEntity<Response<Product>> updateProduct(@RequestParam Long id, @RequestBody ProductDTO productDTO){
         try {
@@ -85,7 +85,7 @@ public class ProductController {
             );
         }
     }
-    @CacheEvict(value = "products", key = "#id")
+//    @CacheEvict(value = "products", key = "#id")
     @DeleteMapping("/delete-product")
     public ResponseEntity<Response<Product>> deleteProduct(@RequestParam Long id){
         Product product = new Product();
