@@ -11,6 +11,7 @@ services:
       - demo-network
 networks:
   demo-network:
+    driver: bridge
 
 #docker-compose -f ./deployment.yml up -d
 

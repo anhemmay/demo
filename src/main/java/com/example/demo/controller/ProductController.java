@@ -2,18 +2,19 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.request.FilterRequest;
 import com.example.demo.dto.request.ProductDTO;
+import com.example.demo.dto.response.ProductPage;
 import com.example.demo.dto.response.Response;
 import com.example.demo.model.Product;
+import com.example.demo.service.IProductRedisService;
 import com.example.demo.service.IProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.example.demo.common.constant.ResponseCode.*;
 import static com.example.demo.common.constant.ResponseMessage.*;
@@ -25,14 +26,29 @@ import static com.example.demo.common.constant.ResponseMessage.*;
 public class ProductController {
     private final IProductService productService;
 
+    private final IProductRedisService productRedisService;
 
     @PostMapping("/filter")
-    public ResponseEntity<Response<Page<Product>>> getAllProducts(@RequestBody FilterRequest filterRequest,
-                                                                  Pageable pageable){
+    public ResponseEntity<Response<ProductPage>> getAllProducts(@RequestBody FilterRequest filterRequest,
+                                                                Pageable pageable){
         try{
+            ProductPage productPageInRedis = productRedisService.getAllProducts(filterRequest, pageable);
+            if(productPageInRedis == null){
+                Page<Product> products = productService.getAllProducts(filterRequest, pageable);
+                ProductPage productPage = ProductPage.builder()
+                        .page(pageable.getPageNumber())
+                        .size(pageable.getPageSize())
+                        .totalPages(products.getTotalPages())
+                        .totalElements(products.getTotalElements())
+                        .products(products.getContent())
+                        .build();
+                productRedisService.saveAllProducts(productPage, filterRequest, pageable);
 
-            Page<Product> productPage = productService.getAllProducts(filterRequest, pageable);
-            return ResponseEntity.ok().body(new Response<>(SUCCESS_CODE,"filter",productPage));
+                return ResponseEntity.ok().body(new Response<>(SUCCESS_CODE,"filter",productPage));
+            }
+            else {
+                return ResponseEntity.ok().body(new Response<>(SUCCESS_CODE,"filter",productPageInRedis));
+            }
         }catch(Exception ex){
 
             return ResponseEntity.badRequest().body(new Response<>(ERROR_CODE, ex.getMessage()));

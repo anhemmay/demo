@@ -1,11 +1,13 @@
 package com.example.demo.dto.response;
 
+import jakarta.persistence.MappedSuperclass;
 import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
 @Getter
+@Builder
 public class Response<T> {
     private String code;
     private String message;

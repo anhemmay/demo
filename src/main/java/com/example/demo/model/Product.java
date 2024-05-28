@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.example.demo.listener.ProductListener;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -7,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.context.event.EventListener;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -18,6 +20,7 @@ import java.util.List;
 @Data
 @Builder
 @Table(name = "products")
+@EntityListeners(ProductListener.class)
 public class Product implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
