@@ -6,12 +6,15 @@ import com.example.demo.dto.request.RegisterDTO;
 import com.example.demo.dto.request.UserDTO;
 import com.example.demo.exception.DataNotFoundException;
 import com.example.demo.model.Role;
+import com.example.demo.model.Token;
 import com.example.demo.model.User;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.ITokenService;
 import com.example.demo.service.IUserService;
 import com.example.demo.util.ConvertUtil;
 import com.example.demo.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.common.errors.AuthorizationException;
 import org.modelmapper.ModelMapper;
@@ -25,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.security.auth.login.AccountLockedException;
+import java.util.Date;
 import java.util.Optional;
 
 import static com.example.demo.common.constant.ResponseMessage.*;
@@ -39,9 +43,10 @@ public class UserServiceImpl implements IUserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final ModelMapper modelMapper;
+    private final ITokenService tokenService;
 
     @Override
-    public String login(LoginDTO loginDTO) throws Exception {
+    public String login(LoginDTO loginDTO, HttpServletRequest request) throws Exception {
         User user = userRepository.findByUsername(loginDTO.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException(WRONG_USERNAME_PASSWORD));
         if(!user.isActive()){
@@ -51,7 +56,9 @@ public class UserServiceImpl implements IUserService {
             throw new UsernameNotFoundException(WRONG_USERNAME_PASSWORD);
         }
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword(), user.getAuthorities()));
-        return jwtUtil.generateToken(user);
+        String jwtToken = jwtUtil.generateToken(user);
+        Token token = tokenService.addToken(user, jwtToken, request);
+        return jwtToken;
     }
 
     @Transactional

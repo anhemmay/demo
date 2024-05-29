@@ -7,6 +7,7 @@ import com.example.demo.dto.request.UserDTO;
 import com.example.demo.dto.response.Response;
 import com.example.demo.model.User;
 import com.example.demo.service.IUserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +22,9 @@ import static com.example.demo.common.constant.ResponseMessage.*;
 public class UserController {
     private final IUserService userService;
     @PostMapping("/login")
-    public ResponseEntity<Response<?>> login(@RequestBody LoginDTO loginDTO){
+    public ResponseEntity<Response<?>> login(@RequestBody LoginDTO loginDTO, HttpServletRequest request){
         try{
-            String token = userService.login(loginDTO);
+            String token = userService.login(loginDTO, request);
             return ResponseEntity.ok().body(
                     new Response<>(SUCCESS_CODE, LOGIN_SUCCESSFULLY, token)
             );

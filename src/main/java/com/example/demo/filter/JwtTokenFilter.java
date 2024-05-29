@@ -1,6 +1,7 @@
 package com.example.demo.filter;
 
 import com.example.demo.model.User;
+import com.example.demo.service.ITokenService;
 import com.example.demo.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -28,6 +29,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final UserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
+    private final ITokenService tokenService;
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
@@ -44,6 +46,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 return;
             }
             final String token = authHeader.substring(7);
+            if(!tokenService.isTokenExists(token)){
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token is revoked or invalid");
+            }
             final String phoneNumber = jwtUtil.extractSubject(token);
             if(phoneNumber != null && SecurityContextHolder.getContext().getAuthentication() == null){
                 User userDetails = (User) userDetailsService.loadUserByUsername(phoneNumber);

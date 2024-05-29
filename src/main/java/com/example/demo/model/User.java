@@ -35,6 +35,9 @@ public class User implements UserDetails {
     @Column(name = "is_active")
     private boolean isActive;
 
+    @OneToMany(mappedBy = "user")
+    private List<Token> tokens;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.getName()));

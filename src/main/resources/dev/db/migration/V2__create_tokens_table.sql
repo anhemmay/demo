@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS tokens(
+    id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    token VARCHAR(250) NOT NULL DEFAULT '',
+    expired TINYINT DEFAULT FALSE,
+    revoked TINYINT DEFAULT FALSE,
+    expiration_date DATETIME,
+    user_id BIGINT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES user(id)
+)
